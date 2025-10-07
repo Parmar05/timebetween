@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Age Gap Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#0f172a; --bg2:#0b3a7a;
+  --accent1:#6dd3ff; --accent2:#7b61ff;
+  --glass: rgba(255,255,255,0.06);
+  --success:#26de81; --danger:#ff6b6b; --muted:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; font-family:Inter,system-ui,sans-serif;
+  display:flex; justify-content:center; align-items:center;
+  min-height:100vh;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2));
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  color:#e6eef8;
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.wrap{
+  width:100%; max-width:900px;
+  padding:24px;
+  border-radius:16px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  animation: fadeIn 1s ease;
+}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+header{display:flex; align-items:center; gap:14px; margin-bottom:16px;}
+.logo{
+  width:56px; height:56px; border-radius:12px;
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  display:flex; justify-content:center; align-items:center;
+  font-weight:700; color:#021; font-size:24px;
+}
+h1{margin:0; font-size:22px;}
+p.lead{margin:4px 0 12px; color:var(--muted); font-size:13px;}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.card{
+  background:var(--glass);
+  padding:18px; border-radius:14px;
+  border:1px solid rgba(255,255,255,0.03);
+  animation: fadeIn 0.8s ease;
+}
+label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
+input[type="date"], input[type="text"], select{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06);
+  background:transparent; color:inherit; font-size:15px; outline:none;
+}
+input::placeholder{color:rgba(226,238,248,0.45);}
+.actions{display:flex; gap:10px; margin-top:12px;}
+button{
+  cursor:pointer; border:0; padding:10px 14px; border-radius:12px; font-weight:600; transition:0.3s;
+}
+button:hover{transform:scale(1.05);}
+.btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#021; box-shadow:0 8px 20px rgba(123,97,255,0.15);}
+.btn-ghost{background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted);}
+.result{margin-top:14px; padding:14px; border-radius:12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03);}
+.big{font-size:20px; font-weight:700; margin:6px 0;}
+.muted{color:var(--muted); font-size:13px; margin:6px 0;}
+.share-btns{display:flex; gap:10px; margin-top:14px; justify-content:center;}
+.share-btns button{
+  padding:10px 18px; font-size:14px; font-weight:700;
+  border-radius:50px; border:none; cursor:pointer; color:white; display:flex; gap:6px; align-items:center; transition:0.3s;
+}
+.share-btns button:hover{transform:scale(1.05);}
+.share-btns .whatsapp{background: linear-gradient(45deg,#25D366,#1ebe5b);}
+.share-btns .facebook{background: linear-gradient(45deg,#1877F2,#3b5998);}
+.fun-meter{
+  margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+}
+.pill{
+  padding:6px 12px; border-radius:999px; background:rgba(255,255,255,0.06); font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="logo">AG</div>
+    <div>
+      <h1>Fun Age Gap Calculator</h1>
+      <p class="lead">Compute exact age differences and get fun messages!</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <label>Name (Person A)</label>
+      <input id="nameA" type="text" placeholder="e.g. Alice" />
+      <label>Birthday (Person A)</label>
+      <input id="dobA" type="date" />
+
+      <label style="margin-top:10px">Name (Person B)</label>
+      <input id="nameB" type="text" placeholder="e.g. Bob" />
+      <label>Birthday (Person B)</label>
+      <input id="dobB" type="date" />
+
+      <div style="margin-top:10px; display:flex; gap:6px; align-items:center">
+        <label style="margin:0; font-size:13px; color:var(--muted)">Mode:</label>
+        <select id="mode">
+          <option value="gap">Age gap</option>
+          <option value="today">Show ages today</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" id="calcBtn">Calculate</button>
+        <button class="btn-ghost" id="swapBtn">Swap</button>
+        <button class="btn-ghost" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="resultArea" class="result">
+        <div class="muted">Result will appear here.</div>
+      </div>
+      <div class="fun-meter" id="funMeter"></div>
+      <div class="share-btns">
+        <button class="whatsapp" onclick="shareWhatsApp()">WhatsApp</button>
+        <button class="facebook" onclick="shareFacebook()">Facebook</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function computeYMD(dateA, dateB){
+  let a = new Date(Date.UTC(dateA.getFullYear(), dateA.getMonth(), dateA.getDate()));
+  let b = new Date(Date.UTC(dateB.getFullYear(), dateB.getMonth(), dateB.getDate()));
+  if(a>b){ let t=a; a=b; b=t;}
+  let y = b.getFullYear() - a.getFullYear();
+  let m = b.getMonth() - a.getMonth();
+  let d = b.getDate() - a.getDate();
+  if(d<0){ const prev = new Date(Date.UTC(b.getFullYear(), b.getMonth(),0)); d+=prev.getDate(); m-=1;}
+  if(m<0){ m+=12; y-=1;}
+  const msPerDay=24*60*60*1000; const totalDays=Math.floor((b-a)/msPerDay);
+  return {years:y, months:m, days:d, totalDays};
+}
+function formatYMD(obj){const parts=[]; if(obj.years) parts.push(obj.years+' yrs'); if(obj.months) parts.push(obj.months+' m'); if(obj.days || parts.length===0) parts.push(obj.days+' d'); return parts.join(', ');}
+function safeName(n, fallback){return n && n.trim()?n.trim():fallback;}
+const nameA=document.getElementById('nameA');
+const dobA=document.getElementById('dobA');
+const nameB=document.getElementById('nameB');
+const dobB=document.getElementById('dobB');
+const mode=document.getElementById('mode');
+const calcBtn=document.getElementById('calcBtn');
+const swapBtn=document.getElementById('swapBtn');
+const clearBtn=document.getElementById('clearBtn');
+const resultArea=document.getElementById('resultArea');
+const funMeter=document.getElementById('funMeter');
+
+function showMessage(html){
+  resultArea.innerHTML=html;
+}
+function calculate(){
+  const nA=safeName(nameA.value,'Person A');
+  const nB=safeName(nameB.value,'Person B');
+  const dA=dobA.value?new Date(dobA.value):null;
+  const dB=dobB.value?new Date(dobB.value):null;
+  funMeter.innerHTML='';
+
+  if(mode.value==='gap'){
+    if(!dA || !dB){showMessage('<div class="muted">Enter both birthdays</div>'); return;}
+    const diff=computeYMD(dA,dB);
+    let older,diffMsg='';
+    if(dA<dB){ older=nA; younger=nB;} else if(dB<dA){ older=nB; younger=nA;} else older=null;
+    if(older){
+      diffMsg=`<div class="muted">${older} is older than ${younger} by:</div><div class="big">${formatYMD(diff)}</div><div class="muted">${diff.totalDays.toLocaleString()} days total</div>`;
+      // fun meter
+      const percent=Math.min(100, Math.round(diff.totalDays/365*3)); // arbitrary
+      for(let i=0;i<5;i++){
+        let color=percent>=i*20?'#26de81':'#888';
+        funMeter.innerHTML+=`<div class="pill" style="background:${color}">⭐</div>`;
+      }
+    } else diffMsg=`<div class="big">Same birthday! 🎉</div>`;
+    showMessage(diffMsg);
+  } else{
+    const today=new Date();
+    if(!dA && !dB){showMessage('<div class="muted">Enter at least one birthday</div>'); return;}
+    let html='';
+    if(dA){const aAge=computeYMD(dA,today); html+=`<div class="muted">${nA}:</div><div class="big">${formatYMD(aAge)}</div><div class="muted">${aAge.totalDays.toLocaleString()} days old</div>`;}
+    if(dB){const bAge=computeYMD(dB,today); html+=`<hr style="border:none;border-top:1px solid rgba(255,255,255,0.04);margin:8px 0;"><div class="muted">${nB}:</div><div class="big">${formatYMD(bAge)}</div><div class="muted">${bAge.totalDays.toLocaleString()} days old</div>`;}
+    showMessage(html);
+  }
+}
+
+swapBtn.addEventListener('click',()=>{
+  let ta=nameA.value, tb=nameB.value, da=dobA.value, db=dobB.value;
+  nameA.value=tb; nameB.value=ta; dobA.value=db; dobB.value=da;
+});
+clearBtn.addEventListener('click',()=>{
+  nameA.value=''; nameB.value=''; dobA.value=''; dobB.value='';
+  showMessage('<div class="muted">Cleared. Enter new names and dates.</div>');
+  funMeter.innerHTML='';
+});
+calcBtn.addEventListener('click',calculate);
+
+function shareWhatsApp(){window.open(`https://wa.me/?text=${encodeURIComponent(resultArea.innerText)}`);}
+function shareFacebook(){window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`);}
+</script>
+
+</body>
+</html>
